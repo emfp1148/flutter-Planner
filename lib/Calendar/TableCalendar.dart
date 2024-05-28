@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:planner_application/Calendar/TimerScreen.dart';
 import 'package:table_calendar/table_calendar.dart';
-import './database_helper.dart';
+
 import './AddEventScreen.dart';
+import './database_helper.dart';
 
 class TableCalendarScreen extends StatefulWidget {
   const TableCalendarScreen({super.key});
@@ -61,6 +63,27 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Table Calendar'),
+        leading: PopupMenuButton<String>(
+          itemBuilder: (BuildContext context) {
+            return {'갤린더', '타이머'}.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
+          onSelected: (value) {
+            if (value == '갤린더') {
+            } else if (value == '타이머') {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => TimerScreen(),
+                ),
+              );
+            }
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
