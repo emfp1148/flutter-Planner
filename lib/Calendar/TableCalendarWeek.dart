@@ -38,13 +38,9 @@ class _TableCalendarScreenState extends State<TableCalendarScreenWeek> {
     return DateTime(date.year, date.month, date.day);
   }
 
-  void _addEvent(
-      Event event, DateTime date, TimeOfDay startTime, TimeOfDay endTime) {
-    setState(() {
-      final normalizedDate = _normalizeDate(date);
-      events[normalizedDate] = [..._getEventsForDay(normalizedDate), event];
-      _loadEventsForSelectedDay(); // 새로운 이벤트를 추가한 후 다시 로드
-    });
+  Future<void> _addEvent(Event event) async {
+    await DatabaseHelper.instance.create(event);
+    await _loadEventsForSelectedDay();
   }
 
   Future<void> _loadEventsForSelectedDay() async {
@@ -63,7 +59,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreenWeek> {
 
   void _moveToNextWeek() {
     setState(() {
-      focusedDay = focusedDay.add(Duration(days: 7));
+      focusedDay = focusedDay.add(const Duration(days: 7));
       selectedDay = focusedDay;
     });
     _loadEventsForSelectedDay();
@@ -71,7 +67,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreenWeek> {
 
   void _moveToPreviousWeek() {
     setState(() {
-      focusedDay = focusedDay.subtract(Duration(days: 7));
+      focusedDay = focusedDay.subtract(const Duration(days: 7));
       selectedDay = focusedDay;
     });
     _loadEventsForSelectedDay();
@@ -189,7 +185,10 @@ class _TableCalendarScreenState extends State<TableCalendarScreenWeek> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => AddEventScreen(
-                onAddEvent: _addEvent,
+                onAddEvent: (Event event, DateTime date, TimeOfDay startTime,
+                    TimeOfDay endTime) {
+                  _addEvent(event);
+                },
               ),
             ),
           );
@@ -198,8 +197,4 @@ class _TableCalendarScreenState extends State<TableCalendarScreenWeek> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(const TableCalendarScreenWeek());
 }
