@@ -50,12 +50,29 @@ class _SimpleCalendarScreenState extends State<SimpleCalendarScreen> {
     _loadEventsForSelectedDay();
   }
 
-  void _addEvent(
-      Event event, DateTime date, TimeOfDay startTime, TimeOfDay endTime) {
-    setState(() {
-      DatabaseHelper.instance.create(event);
-      _loadEventsForSelectedDay(); // 새로운 이벤트를 추가한 후 다시 로드
-    });
+  Future<void> _addEvent(Event event, DateTime date, TimeOfDay startTime,
+      TimeOfDay endTime) async {
+    final eventsFromDb = await DatabaseHelper.instance.readEventsByDate(date);
+    final eventExists = eventsFromDb.any((e) =>
+        e.title == event.title &&
+        e.date == event.date &&
+        e.startTime == event.startTime &&
+        e.endTime == event.endTime);
+
+    if (!eventExists) {
+      await DatabaseHelper.instance.create(event);
+      if (isSameDay(selectedDay, date)) {
+        setState(() {
+          selectedEvents.add(event);
+        });
+      }
+    }
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 
   @override
@@ -126,14 +143,20 @@ class _SimpleCalendarScreenState extends State<SimpleCalendarScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          final result = await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => AddEventScreen(
-                onAddEvent: _addEvent,
+                onAddEvent: (event, date, startTime, endTime) async {
+                  await _addEvent(event, date, startTime, endTime);
+                  return true;
+                },
               ),
             ),
           );
+          if (result == true) {
+            await _loadEventsForSelectedDay();
+          }
         },
         child: const Icon(Icons.add),
       ),

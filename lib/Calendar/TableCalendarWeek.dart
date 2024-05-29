@@ -8,10 +8,11 @@ class TableCalendarScreenWeek extends StatefulWidget {
   const TableCalendarScreenWeek({super.key});
 
   @override
-  State<TableCalendarScreenWeek> createState() => _TableCalendarScreenState();
+  State<TableCalendarScreenWeek> createState() =>
+      _TableCalendarScreenWeekState();
 }
 
-class _TableCalendarScreenState extends State<TableCalendarScreenWeek> {
+class _TableCalendarScreenWeekState extends State<TableCalendarScreenWeek> {
   Map<DateTime, List<Event>> events = {};
   List<Event> selectedEvents = [];
 
@@ -39,8 +40,18 @@ class _TableCalendarScreenState extends State<TableCalendarScreenWeek> {
   }
 
   Future<void> _addEvent(Event event) async {
-    await DatabaseHelper.instance.create(event);
-    await _loadEventsForSelectedDay();
+    final eventsFromDb = await DatabaseHelper.instance
+        .readEventsByDate(DateTime.parse(event.date));
+    final eventExists = eventsFromDb.any((e) =>
+        e.title == event.title &&
+        e.date == event.date &&
+        e.startTime == event.startTime &&
+        e.endTime == event.endTime);
+
+    if (!eventExists) {
+      await DatabaseHelper.instance.create(event);
+      await _loadEventsForSelectedDay(); // 새로운 이벤트를 추가한 후 다시 로드
+    }
   }
 
   Future<void> _loadEventsForSelectedDay() async {
