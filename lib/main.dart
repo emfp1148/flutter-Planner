@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
             color: Color(0xFF232B55),
           ),
         ),
-        cardColor: Colors.black54,
+        cardColor: Color(0xFF81D4FA),
       ),
       home: const TableCalendarScreen(),
     );

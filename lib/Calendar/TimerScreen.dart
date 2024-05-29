@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:planner_application/Calendar/TableCalendar.dart';
 
+import './TimePicker.dart';
+
 class TimerScreen extends StatefulWidget {
   const TimerScreen({super.key});
 
@@ -34,7 +36,6 @@ class _HomeScreenState extends State<TimerScreen> {
 
   String format(int seconds) {
     var duration = Duration(seconds: seconds);
-    print(duration.toString().split(".").first.substring(2, 7));
     return duration.toString().split(".").first.substring(2, 7);
   }
 
@@ -50,6 +51,25 @@ class _HomeScreenState extends State<TimerScreen> {
     setState(() {
       isRunning = false;
     });
+  }
+
+  Future<void> _showTimePickerDialog(BuildContext context) async {
+    final initialMinutes = totalSeconds ~/ 60;
+    final initialSeconds = totalSeconds % 60;
+
+    final result = await showDialog<int>(
+      context: context,
+      builder: (context) => TimePicker(
+        initialMinutes: initialMinutes,
+        initialSeconds: initialSeconds,
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        totalSeconds = result;
+      });
+    }
   }
 
   @override
@@ -83,14 +103,19 @@ class _HomeScreenState extends State<TimerScreen> {
         children: [
           Flexible(
             flex: 1,
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                format(totalSeconds),
-                style: TextStyle(
-                  color: Theme.of(context).cardColor,
-                  fontSize: 89,
-                  fontWeight: FontWeight.w600,
+            child: GestureDetector(
+              onTap: () => _showTimePickerDialog(context),
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  format(
+                    totalSeconds,
+                  ),
+                  style: TextStyle(
+                    color: Theme.of(context).cardColor,
+                    fontSize: 89,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -121,7 +146,7 @@ class _HomeScreenState extends State<TimerScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Pomodoros',
+                          'Cycle Count',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
