@@ -91,6 +91,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     startTime: _startTime.format(context),
                     endTime: _endTime.format(context),
                   );
+                  // if (_startTime.isAfter(_endTime) ||
+                  //     _startTime == _endTime){
+                  //   debugPrint('시작 시간이 끝나는 시간보다 늦을 수 없습니다.');
+                  //   return;
+                  // }
                   final id = await DatabaseHelper.instance.create(event);
                   if (id != 0) {
                     debugPrint('Event added to DB with id: $id');
