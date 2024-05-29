@@ -78,7 +78,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(
-                  builder: (context) => TimerScreen(),
+                  builder: (context) => const TimerScreen(),
                 ),
               );
             }

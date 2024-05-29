@@ -71,14 +71,14 @@ class _HomeScreenState extends State<TimerScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(
-                  builder: (context) => TableCalendarScreen(),
+                  builder: (context) => const TableCalendarScreen(),
                 ),
               );
             } else if (value == '타이머') {}
           },
         ),
       ),
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
           Flexible(
@@ -125,7 +125,10 @@ class _HomeScreenState extends State<TimerScreen> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                            color: Theme.of(context).textTheme.headline1!.color,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .color,
                           ),
                         ),
                         Text(
@@ -133,7 +136,10 @@ class _HomeScreenState extends State<TimerScreen> {
                           style: TextStyle(
                             fontSize: 58,
                             fontWeight: FontWeight.w600,
-                            color: Theme.of(context).textTheme.headline1!.color,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .color,
                           ),
                         ),
                       ],
