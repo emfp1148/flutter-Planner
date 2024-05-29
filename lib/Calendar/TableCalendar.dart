@@ -111,15 +111,21 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                 weekendTextStyle: TextStyle(color: Colors.red),
               ),
             ),
-            ...selectedEvents.map((event) => ListTile(
-                  title: Text(event.title),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      _eventController.text = event.title;
-                    },
+            Column(
+              children: [
+                ...selectedEvents.map(
+                  (event) => ListTile(
+                    title: Text(event.title),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        _eventController.text = event.title;
+                      },
+                    ),
                   ),
-                )),
+                ),
+              ],
+            )
           ],
         ),
       ),
