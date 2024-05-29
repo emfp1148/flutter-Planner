@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:planner_application/Calendar/TableCalendar.dart';
 
 class TimerScreen extends StatefulWidget {
   const TimerScreen({super.key});
@@ -10,7 +11,7 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<TimerScreen> {
-  static const initSeconds = 10;
+  static const initSeconds = 3000;
   int totalSeconds = initSeconds;
   bool isRunning = false;
   int totalPomodoros = 0;
@@ -54,6 +55,29 @@ class _HomeScreenState extends State<TimerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Table Calendar'),
+        leading: PopupMenuButton<String>(
+          itemBuilder: (BuildContext context) {
+            return {'갤린더', '타이머'}.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
+          onSelected: (value) {
+            if (value == '갤린더') {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => TableCalendarScreen(),
+                ),
+              );
+            } else if (value == '타이머') {}
+          },
+        ),
+      ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Column(
         children: [

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import './Calendar/TableCalendar.dart';
+import 'package:planner_application/Calendar/TableCalendar.dart';
 
 void main() async {
   await initializeDateFormatting();
@@ -13,7 +13,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(
+        backgroundColor: const Color(0xFFE7626C),
+        textTheme: const TextTheme(
+          headline1: TextStyle(
+            color: Color(0xFF232B55),
+          ),
+        ),
+        cardColor: const Color(0xFFF4EDDB),
+      ),
       home: TableCalendarScreen(),
     );
   }
