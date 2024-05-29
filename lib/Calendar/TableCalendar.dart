@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import './database_helper.dart';
 import './AddEventScreen.dart';
+import './View.dart';
 
 class TableCalendarScreen extends StatefulWidget {
   const TableCalendarScreen({super.key});
@@ -111,7 +112,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                 weekendTextStyle: TextStyle(color: Colors.red),
               ),
             ),
-            ListView(
+            eventListView(
                 selectedEvents: selectedEvents,
                 eventController: _eventController)
           ],
@@ -129,36 +130,6 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
         },
         child: const Icon(Icons.add),
       ),
-    );
-  }
-}
-
-class ListView extends StatelessWidget {
-  const ListView({
-    super.key,
-    required this.selectedEvents,
-    required TextEditingController eventController,
-  }) : _eventController = eventController;
-
-  final List<Event> selectedEvents;
-  final TextEditingController _eventController;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ...selectedEvents.map(
-          (event) => ListTile(
-            title: Text(event.title),
-            trailing: IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                _eventController.text = event.title;
-              },
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
