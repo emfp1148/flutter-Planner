@@ -111,21 +111,9 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                 weekendTextStyle: TextStyle(color: Colors.red),
               ),
             ),
-            Column(
-              children: [
-                ...selectedEvents.map(
-                  (event) => ListTile(
-                    title: Text(event.title),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        _eventController.text = event.title;
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            )
+            ListView(
+                selectedEvents: selectedEvents,
+                eventController: _eventController)
           ],
         ),
       ),
@@ -141,6 +129,36 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+}
+
+class ListView extends StatelessWidget {
+  const ListView({
+    super.key,
+    required this.selectedEvents,
+    required TextEditingController eventController,
+  }) : _eventController = eventController;
+
+  final List<Event> selectedEvents;
+  final TextEditingController _eventController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ...selectedEvents.map(
+          (event) => ListTile(
+            title: Text(event.title),
+            trailing: IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                _eventController.text = event.title;
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
