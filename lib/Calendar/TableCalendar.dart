@@ -4,9 +4,8 @@ import 'package:planner_application/Calendar/TimerScreen.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import './AddEventScreen.dart';
-import './database_helper.dart';
-import './AddEventScreen.dart';
 import './View.dart';
+import './database_helper.dart';
 
 class TableCalendarScreen extends StatefulWidget {
   const TableCalendarScreen({super.key});

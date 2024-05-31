@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import './database_helper.dart';
 
 class eventListView extends StatelessWidget {
@@ -11,6 +12,40 @@ class eventListView extends StatelessWidget {
   final List<Event> selectedEvents;
   final TextEditingController _eventController;
 
+  void _showEditDialog(BuildContext context, Event event) {
+    final controller = TextEditingController(text: event.title);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('일정 수정'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: '일정 입력'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('취소'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final updatedEvent = event.copy(title: controller.text);
+                await DatabaseHelper.instance.update(updatedEvent);
+
+                Navigator.of(context).pop();
+              },
+              child: const Text('저장'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,11 +54,17 @@ class eventListView extends StatelessWidget {
           ...selectedEvents.map((event) => ListTile(
                 title: Text(event.title),
                 subtitle: Text('${event.startTime} - ${event.endTime}'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    _eventController.text = event.title;
-                  },
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        _showEditDialog(context, event);
+                      },
+                    ),
+                  ],
                 ),
               )),
         ] else ...[
