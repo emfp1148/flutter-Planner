@@ -7,7 +7,6 @@ import 'package:planner_application/Calendar/TableCalendar.dart';
 
 void main() async {
   await initializeDateFormatting();
-
   runApp(const MyApp());
 }
 
@@ -24,11 +23,12 @@ class MyApp extends StatelessWidget {
             color: Color(0xFF232B55),
           ),
         ),
-        cardColor: Color(0xFF81D4FA),
+        cardColor: const Color(0xFF81D4FA),
       ),
+      // home: const TableCalendarScreen(),
+      // re
+      // turn const MaterialApp(
       home: const TableCalendarScreen(),
-    // return const MaterialApp(
-      // home: TableCalendarScreen(),
       // home: TableCalendarScreenWeek(),
       // home: SimpleCalendarScreen(),
     );

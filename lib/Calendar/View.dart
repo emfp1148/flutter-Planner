@@ -57,7 +57,8 @@ class EventListView extends StatelessWidget {
         if (selectedEvents.isNotEmpty) ...[
           ...selectedEvents.map((event) => ListTile(
                 title: Text(event.title),
-                subtitle: Text('${event.startTime} - ${event.endTime}'),
+                subtitle: Text(
+                    '${event.date}\n${event.startTime} - ${event.endTime}'),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -65,7 +66,7 @@ class EventListView extends StatelessWidget {
                         onPressed: () {
                           _deleteEvent(event.id!);
                         },
-                        icon: Icon(Icons.delete)),
+                        icon: const Icon(Icons.delete)),
                     IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () {

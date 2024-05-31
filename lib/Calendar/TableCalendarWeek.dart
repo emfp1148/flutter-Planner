@@ -152,7 +152,7 @@ class _TableCalendarScreenWeekState extends State<TableCalendarScreenWeek> {
                             width: 7.0,
                             height: 7.0,
                             margin: const EdgeInsets.symmetric(horizontal: 1.5),
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.blue,
                             ),

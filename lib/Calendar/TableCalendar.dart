@@ -17,14 +17,18 @@ class TableCalendarScreen extends StatefulWidget {
 }
 
 class _TableCalendarScreenState extends State<TableCalendarScreen> {
+  bool isVisible = false;
+
   Map<DateTime, List<Event>> events = {};
   List<Event> selectedEvents = [];
+  List<Event> selectedEventsMonth = [];
 
   DateTime selectedDay = DateTime(
     DateTime.now().year,
     DateTime.now().month,
     DateTime.now().day,
   );
+
   DateTime focusedDay = DateTime.now();
 
   final TextEditingController _eventController = TextEditingController();
@@ -44,6 +48,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
     setState(() {
       events[date] = [..._getEventsForDay(date), event];
       _loadEventsForSelectedDay(); // 새로운 이벤트를 추가한 후 다시 로드
+      _loadEventForMonth();
     });
   }
 
@@ -55,15 +60,62 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
     });
   }
 
+  Future<void> _loadEventForMonth() async {
+    final eventsFromDb =
+        await DatabaseHelper.instance.readEventsByMonth(selectedDay);
+    setState(() {
+      selectedEventsMonth = eventsFromDb;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _loadEventsForSelectedDay();
+    _loadEventForMonth();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            const UserAccountsDrawerHeader(
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage('lib/assets/image/6915987.png'),
+              ),
+              accountName: Text('ChosunPoolFive'),
+              accountEmail: Text('ChosunPoolFive@chosun.ac.kr'),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.open_in_browser,
+                color: Colors.grey[850],
+              ),
+              title: const Text('이번 달 일정'),
+              onTap: () {
+                setState(() {
+                  isVisible = !isVisible;
+                });
+              },
+            ),
+            Visibility(
+              visible: isVisible,
+              child: SingleChildScrollView(
+                child: EventListView(
+                  selectedEvents: selectedEventsMonth,
+                  eventController: _eventController,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: const Text('Table Calendar'),
         leading: PopupMenuButton<String>(
@@ -103,15 +155,15 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Text(
-              '자율설계',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
+        child: Column(children: [
+          const Text(
+            '자율설계',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
             ),
+          ),
+          Stack(children: <Widget>[
             TableCalendar(
               //locale: 'Ko_KR',
               firstDay: DateTime.utc(2021, 10, 16),
@@ -124,6 +176,15 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                   this.focusedDay = focusedDay;
                 });
                 _loadEventsForSelectedDay(); // 날짜가 선택될 때 이벤트 로드
+                _loadEventForMonth();
+              },
+              onPageChanged: (day) {
+                setState(() {
+                  focusedDay = DateTime(day.year, day.month, day.day);
+                  selectedDay = DateTime(day.year, day.month, day.day);
+                });
+                _loadEventsForSelectedDay(); // 날짜가 선택될 때 이벤트 로드
+                _loadEventForMonth();
               },
               selectedDayPredicate: (DateTime day) {
                 return isSameDay(selectedDay, day);
@@ -151,12 +212,39 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                 weekendTextStyle: TextStyle(color: Colors.red),
               ),
             ),
-            EventListView(
-              selectedEvents: selectedEvents,
-              eventController: _eventController,
+            Positioned(
+              top: 10,
+              left: MediaQuery.of(context).size.width / 2 - 80, //화면 넓이 double,
+              child: Opacity(
+                opacity: 0.5, // 투명도 0으로 할 예정
+                child: ElevatedButton(
+                    onPressed: () async {
+                      DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: focusedDay,
+                        firstDate: DateTime(2021, 10, 16),
+                        lastDate: DateTime(2030, 3, 14),
+                      );
+                      if (picked != null && picked != focusedDay) {
+                        setState(() {
+                          focusedDay = picked;
+                          selectedDay = picked;
+                        });
+                        _loadEventsForSelectedDay();
+                        _loadEventForMonth();
+                      }
+                    },
+                    child: Container(
+                      width: 110,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50)),
+                    )),
+              ),
             ),
-          ],
-        ),
+          ]),
+          EventListView(
+              selectedEvents: selectedEvents, eventController: _eventController)
+        ]),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
