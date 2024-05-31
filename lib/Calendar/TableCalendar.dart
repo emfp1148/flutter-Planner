@@ -8,6 +8,10 @@ import './database_helper.dart';
 import './AddEventScreen.dart';
 import './View.dart';
 
+import './TableCalendarWeek.dart';
+import './TableCalendarDay.dart';
+import './TimerScreen.dart';
+
 class TableCalendarScreen extends StatefulWidget {
   const TableCalendarScreen({super.key});
 
@@ -67,7 +71,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
         title: const Text('Table Calendar'),
         leading: PopupMenuButton<String>(
           itemBuilder: (BuildContext context) {
-            return {'갤린더', '타이머'}.map((String choice) {
+            return {'캘린더', '캘린더(일주일)', '캘린더(하루)', '타이머'}.map((String choice) {
               return PopupMenuItem<String>(
                 value: choice,
                 child: Text(choice),
@@ -75,7 +79,21 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
             }).toList();
           },
           onSelected: (value) {
-            if (value == '갤린더') {
+            if (value == '캘린더') {
+            } else if (value == '캘린더(일주일)') {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const TableCalendarScreenWeek(),
+                ),
+              );
+            } else if (value == '캘린더(하루)') {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const SimpleCalendarScreen(),
+                ),
+              );
             } else if (value == '타이머') {
               Navigator.push(
                 context,

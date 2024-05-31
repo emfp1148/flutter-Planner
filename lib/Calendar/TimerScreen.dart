@@ -5,6 +5,11 @@ import 'package:planner_application/Calendar/TableCalendar.dart';
 
 import './TimePicker.dart';
 
+import 'package:planner_application/Calendar/TimerScreen.dart';
+import './TableCalendar.dart';
+import './TableCalendarDay.dart';
+import './TableCalendarWeek.dart';
+
 class TimerScreen extends StatefulWidget {
   const TimerScreen({super.key});
 
@@ -79,7 +84,7 @@ class _HomeScreenState extends State<TimerScreen> {
         title: const Text('Table Calendar'),
         leading: PopupMenuButton<String>(
           itemBuilder: (BuildContext context) {
-            return {'갤린더', '타이머'}.map((String choice) {
+            return {'캘린더', '캘린더(일주일)', '캘린더(하루)', '타이머'}.map((String choice) {
               return PopupMenuItem<String>(
                 value: choice,
                 child: Text(choice),
@@ -87,11 +92,25 @@ class _HomeScreenState extends State<TimerScreen> {
             }).toList();
           },
           onSelected: (value) {
-            if (value == '갤린더') {
+            if (value == '캘린더') {
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(
                   builder: (context) => const TableCalendarScreen(),
+                ),
+              );
+            } else if (value == '캘린더(일주일)') {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const TableCalendarScreenWeek(),
+                ),
+              );
+            } else if (value == '캘린더(하루)') {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const SimpleCalendarScreen(),
                 ),
               );
             } else if (value == '타이머') {}
