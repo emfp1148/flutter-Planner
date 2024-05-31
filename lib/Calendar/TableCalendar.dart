@@ -5,7 +5,6 @@ import 'package:table_calendar/table_calendar.dart';
 
 import './AddEventScreen.dart';
 import './database_helper.dart';
-import './AddEventScreen.dart';
 import './View.dart';
 
 class TableCalendarScreen extends StatefulWidget {
@@ -75,14 +74,14 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        endDrawer : Drawer(
+      endDrawer : Drawer(
         child:SingleChildScrollView(
-          child:
-            eventListView(
+              child:eventListView(
                 selectedEvents: selectedEventsMonth,
-                eventController: _eventController)
-        )
-      ),
+                eventController: _eventController,
+              ),
+          ),
+        ),
       appBar: AppBar(
         title: const Text('Table Calendar'),
         leading: PopupMenuButton<String>(
@@ -117,61 +116,95 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            TableCalendar(
-              //locale: 'Ko_KR',
-              firstDay: DateTime.utc(2021, 10, 16),
-              lastDay: DateTime.utc(2030, 3, 14),
-              focusedDay: focusedDay,
-              eventLoader: _getEventsForDay,
-              onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-                print("Day select");
-                setState(() {
-                  this.selectedDay = selectedDay;
-                  this.focusedDay = focusedDay;
-                });
-                _loadEventsForSelectedDay(); // 날짜가 선택될 때 이벤트 로드
-                _loadEventForMonth();
-              },
-              onPageChanged: (focusedDay){
-                print("hello");
-                print(focusedDay);
-                setState(() {
-                  this.focusedDay = DateTime(focusedDay.year,focusedDay.month,1);
-                  this.selectedDay = DateTime(focusedDay.year,focusedDay.month,1);
-                });
-                _loadEventsForSelectedDay(); // 날짜가 선택될 때 이벤트 로드
-                _loadEventForMonth();
-              },
-              selectedDayPredicate: (DateTime day) {
-                return isSameDay(selectedDay, day);
-              },
-              headerStyle: HeaderStyle(
-                titleCentered: true,
-                titleTextFormatter: (date, locale) =>
-                    DateFormat.yMMMM(locale).format(date),
-                formatButtonVisible: false,
-              ),
-              calendarStyle: const CalendarStyle(
-                canMarkersOverflow: false,
-                markersAutoAligned: true,
-                markerSize: 10.0,
-                rangeHighlightScale: 1.0,
-                rangeHighlightColor: Color(0xFFBBDDFF),
-                selectedTextStyle: TextStyle(
-                  color: Color(0xFFFAFAFA),
-                  fontSize: 16.0,
+            Stack(
+              children: <Widget>[
+                TableCalendar(
+                  //locale: 'Ko_KR',
+                  firstDay: DateTime.utc(2021, 10, 16),
+                  lastDay: DateTime.utc(2030, 3, 14),
+                  focusedDay: focusedDay,
+                  eventLoader: _getEventsForDay,
+                 onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+                   print("Day select");
+                    setState(() {
+                      this.selectedDay = selectedDay;
+                      this.focusedDay = focusedDay;
+                    });
+                    _loadEventsForSelectedDay(); // 날짜가 선택될 때 이벤트 로드
+                    _loadEventForMonth();
+                  },
+                  onPageChanged: (Day){
+                    print("hello");
+                    print(Day);
+                    setState(() {
+                      focusedDay = DateTime(Day.year, Day.month, Day.day);
+                      selectedDay = DateTime(Day.year, Day.month, Day.day);
+                    });
+                    _loadEventsForSelectedDay(); // 날짜가 선택될 때 이벤트 로드
+                    _loadEventForMonth();
+                  },
+                  selectedDayPredicate: (DateTime day) {
+                   return isSameDay(selectedDay, day);
+                  },
+                 headerStyle: HeaderStyle(
+                   titleCentered: true,
+                   titleTextFormatter: (date, locale) =>
+                      DateFormat.yMMMM(locale).format(date),
+                   formatButtonVisible: false,
+                 ),
+                 calendarStyle: const CalendarStyle(
+                   canMarkersOverflow: false,
+                   markersAutoAligned: true,
+                   markerSize: 10.0,
+                   rangeHighlightScale: 1.0,
+                   rangeHighlightColor: Color(0xFFBBDDFF),
+                   selectedTextStyle: TextStyle(
+                     color: Color(0xFFFAFAFA),
+                     fontSize: 16.0,
+                   ),
+                   selectedDecoration: BoxDecoration(
+                     color: Color(0xFF5C6BC0),
+                     shape: BoxShape.circle,
+                   ),
+                   weekendTextStyle: TextStyle(color: Colors.red),
+                 ),
+               ),
+                Positioned(
+                  top: 17,
+                  left: MediaQuery.of(context).size.width/2-80,       //화면 넓이 double,
+                  child: Opacity(
+                    opacity: 0.5, // 투명도 0으로 할 예정
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: focusedDay,
+                            firstDate: DateTime(2021, 10, 16),
+                            lastDate: DateTime(2030, 3, 14),
+                          );
+                          if (picked != null && picked != focusedDay) {
+                            setState(() {
+                              focusedDay = picked;
+                              selectedDay = picked;
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: 110,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50)
+                          ),
+                        )
+                    ),
+                  ),
                 ),
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xFF5C6BC0),
-                  shape: BoxShape.circle,
-                ),
-                weekendTextStyle: TextStyle(color: Colors.red),
-              ),
-            ),
-            eventListView(
+               ]
+             ),
+              eventListView(
                 selectedEvents: selectedEvents,
-                eventController: _eventController)
-          ],
+                eventController: _eventController
+              )
+          ]
         ),
       ),
       floatingActionButton: FloatingActionButton(

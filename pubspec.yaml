@@ -38,6 +38,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   sqflite: ^2.3.3+1
+  sqflite_common_ffi:
 
   path: any
 dev_dependencies:
