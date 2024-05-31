@@ -120,7 +120,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
         title: const Text('Table Calendar'),
         leading: PopupMenuButton<String>(
           itemBuilder: (BuildContext context) {
-            return {'캘린더', '타이머', '주별', '일별'}.map((String choice) {
+            return {'타이머', '주별', '일별'}.map((String choice) {
               return PopupMenuItem<String>(
                 value: choice,
                 child: Text(choice),
@@ -128,8 +128,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
             }).toList();
           },
           onSelected: (value) {
-            if (value == '캘린더') {
-            } else if (value == '타이머') {
+            if (value == '타이머') {
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(

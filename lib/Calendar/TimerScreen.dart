@@ -79,41 +79,6 @@ class _HomeScreenState extends State<TimerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Table Calendar'),
-        leading: PopupMenuButton<String>(
-          itemBuilder: (BuildContext context) {
-            return {'캘린더', '타이머'}.map((String choice) {
-              return PopupMenuItem<String>(
-                value: choice,
-                child: Text(choice),
-              );
-            }).toList();
-          },
-          onSelected: (value) {
-            if (value == '캘린더') {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (context) => const TableCalendarScreen(),
-                ),
-              );
-            } else if (value == '타이머') {
-            } else if (value == '주별') {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (context) => const TableCalendarScreenWeek(),
-                ),
-              );
-            } else if (value == '일별') {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (context) => const SimpleCalendarScreen(),
-                ),
-              );
-            }
-          },
-        ),
       ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
