@@ -46,6 +46,10 @@ class eventListView extends StatelessWidget {
     );
   }
 
+  Future<void> _deleteEvent(int id) async {
+    await DatabaseHelper.instance.delete(id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -57,7 +61,11 @@ class eventListView extends StatelessWidget {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                    IconButton(
+                        onPressed: () {
+                          _deleteEvent(event.id!);
+                        },
+                        icon: Icon(Icons.delete)),
                     IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () {
