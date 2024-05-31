@@ -1,6 +1,6 @@
-import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
-import 'package:intl/intl.dart'; // Add this line
+import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -30,7 +30,7 @@ class DatabaseHelper {
     const timeType = 'TEXT NOT NULL';
 
     await db.execute('''
-    CREATE TABLE events ( 
+    CREATE TABLE $tableEvents ( 
       ${EventFields.id} $idType, 
       ${EventFields.title} $textType,
       ${EventFields.date} $dateType,
@@ -61,9 +61,30 @@ class DatabaseHelper {
     return result.map((json) => Event.fromJson(json)).toList();
   }
 
+  Future<int> update(Event event) async {
+    final db = await instance.database;
+
+    return await db.update(
+      tableEvents,
+      event.toJson(),
+      where: '${EventFields.id} = ?',
+      whereArgs: [event.id],
+    );
+  }
+
+  Future<int> delete(int id) async {
+    final db = await instance.database;
+
+    return await db.delete(
+      tableEvents,
+      where: '${EventFields.id} = ?',
+      whereArgs: [id],
+    );
+  }
+
   Future close() async {
     final db = await instance.database;
-    db.close();
+    await db.close();
   }
 }
 
