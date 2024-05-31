@@ -15,6 +15,9 @@ class TableCalendarScreen extends StatefulWidget {
 }
 
 class _TableCalendarScreenState extends State<TableCalendarScreen> {
+
+  bool isVisible = false;
+
   Map<DateTime, List<Event>> events = {};
   List<Event> selectedEvents = [];
   List<Event> selectedEventsMonth = [];
@@ -75,12 +78,43 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer : Drawer(
-        child:SingleChildScrollView(
-              child:eventListView(
-                selectedEvents: selectedEventsMonth,
-                eventController: _eventController,
+        child:ListView(
+          children: [
+            UserAccountsDrawerHeader(
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage('lib/assets/image/6915987.png'),
               ),
-          ),
+              accountName: Text('ChosunPoolFive'),
+              accountEmail: Text('ChosunPoolFive@chosun.ac.kr'),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+              Icons.open_in_browser,
+              color: Colors.grey[850],
+            ),
+              title: Text('이번 달 일정'),
+              onTap: () {
+                setState(() {
+                  isVisible = !isVisible;
+                });
+              },
+
+            ),
+            Visibility(
+              visible: isVisible,
+              child: SingleChildScrollView(
+                    child:eventListView(
+                      selectedEvents: selectedEventsMonth,
+                      eventController: _eventController,
+                    ),
+                ),
+            ),
+          ],
+        ),
         ),
       appBar: AppBar(
         title: const Text('Table Calendar'),
@@ -125,7 +159,6 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                   focusedDay: focusedDay,
                   eventLoader: _getEventsForDay,
                  onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-                   print("Day select");
                     setState(() {
                       this.selectedDay = selectedDay;
                       this.focusedDay = focusedDay;
@@ -133,12 +166,10 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                     _loadEventsForSelectedDay(); // 날짜가 선택될 때 이벤트 로드
                     _loadEventForMonth();
                   },
-                  onPageChanged: (Day){
-                    print("hello");
-                    print(Day);
+                  onPageChanged: (day){
                     setState(() {
-                      focusedDay = DateTime(Day.year, Day.month, Day.day);
-                      selectedDay = DateTime(Day.year, Day.month, Day.day);
+                      focusedDay = DateTime(day.year, day.month, day.day);
+                      selectedDay = DateTime(day.year, day.month, day.day);
                     });
                     _loadEventsForSelectedDay(); // 날짜가 선택될 때 이벤트 로드
                     _loadEventForMonth();
@@ -170,7 +201,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                  ),
                ),
                 Positioned(
-                  top: 17,
+                  top: 10,
                   left: MediaQuery.of(context).size.width/2-80,       //화면 넓이 double,
                   child: Opacity(
                     opacity: 0.5, // 투명도 0으로 할 예정
@@ -187,6 +218,8 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                               focusedDay = picked;
                               selectedDay = picked;
                             });
+                            _loadEventsForSelectedDay();
+                            _loadEventForMonth();
                           }
                         },
                         child: Container(

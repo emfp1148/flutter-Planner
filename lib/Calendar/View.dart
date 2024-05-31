@@ -18,7 +18,7 @@ class eventListView extends StatelessWidget {
         if (selectedEvents.isNotEmpty) ...[
           ...selectedEvents.map((event) => ListTile(
                 title: Text(event.title),
-                subtitle: Text('${event.startTime} - ${event.endTime}'),
+                subtitle: Text('${event.date}\n${event.startTime} - ${event.endTime}'),
                 trailing: IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () {

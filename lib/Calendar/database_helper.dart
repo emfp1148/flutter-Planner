@@ -70,7 +70,8 @@ class DatabaseHelper {
       columns: EventFields.values,
       where: '${EventFields.date} LIKE ?',
       whereArgs: ['${DateFormat('yyyy-MM').format(date)}%'], // Match year and month
-      orderBy: '${EventFields.startTime} ASC', // Order by start time
+      orderBy: '${EventFields.date} ASC, ${EventFields.startTime} ASC',   // Order by start time
+
     );
 
     return result.map((json) => Event.fromJson(json)).toList();
