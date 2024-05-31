@@ -31,10 +31,19 @@ class _SimpleCalendarScreenState extends State<SimpleCalendarScreen> {
     });
   }
 
+  Future<void> _loadEventsForMonth() async {
+    final eventsFromDb =
+        await DatabaseHelper.instance.readEventsByMonth(selectedDay);
+    setState(() {
+      selectedEvents = eventsFromDb;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _loadEventsForSelectedDay();
+    _loadEventsForMonth();
   }
 
   void _moveToNextDay() {
@@ -42,6 +51,7 @@ class _SimpleCalendarScreenState extends State<SimpleCalendarScreen> {
       selectedDay = selectedDay.add(const Duration(days: 1));
     });
     _loadEventsForSelectedDay();
+    _loadEventsForMonth();
   }
 
   void _moveToPreviousDay() {
@@ -49,6 +59,7 @@ class _SimpleCalendarScreenState extends State<SimpleCalendarScreen> {
       selectedDay = selectedDay.subtract(const Duration(days: 1));
     });
     _loadEventsForSelectedDay();
+    _loadEventsForMonth();
   }
 
   Future<void> _addEvent(Event event, DateTime date, TimeOfDay startTime,

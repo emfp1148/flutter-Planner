@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import './database_helper.dart';
-
 class AddEventScreen extends StatefulWidget {
   final Function(Event, DateTime, TimeOfDay, TimeOfDay) onAddEvent;
 

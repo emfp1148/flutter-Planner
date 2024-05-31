@@ -58,6 +58,21 @@ class DatabaseHelper {
       orderBy: '${EventFields.startTime} ASC', // Order by start time
     );
 
+
+    return result.map((json) => Event.fromJson(json)).toList();
+  }
+
+  Future<List<Event>> readEventsByMonth(DateTime date) async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      tableEvents,
+      columns: EventFields.values,
+      where: '${EventFields.date} LIKE ?',
+      whereArgs: ['${DateFormat('yyyy-MM').format(date)}%'], // Match year and month
+      orderBy: '${EventFields.startTime} ASC', // Order by start time
+    );
+
     return result.map((json) => Event.fromJson(json)).toList();
   }
 

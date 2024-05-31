@@ -18,12 +18,14 @@ class TableCalendarScreen extends StatefulWidget {
 class _TableCalendarScreenState extends State<TableCalendarScreen> {
   Map<DateTime, List<Event>> events = {};
   List<Event> selectedEvents = [];
+  List<Event> selectedEventsMonth = [];
 
   DateTime selectedDay = DateTime(
     DateTime.now().year,
     DateTime.now().month,
     DateTime.now().day,
   );
+
   DateTime focusedDay = DateTime.now();
 
   final TextEditingController _eventController = TextEditingController();
@@ -43,6 +45,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
     setState(() {
       events[date] = [..._getEventsForDay(date), event];
       _loadEventsForSelectedDay(); // 새로운 이벤트를 추가한 후 다시 로드
+      _loadEventForMonth();
     });
   }
 
@@ -54,15 +57,32 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
     });
   }
 
+  Future<void> _loadEventForMonth() async{
+    final eventsFromDb =
+        await DatabaseHelper.instance.readEventsByMonth(selectedDay);
+    setState(() {
+      selectedEventsMonth = eventsFromDb;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _loadEventsForSelectedDay();
+    _loadEventForMonth();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        endDrawer : Drawer(
+        child:SingleChildScrollView(
+          child:
+            eventListView(
+                selectedEvents: selectedEventsMonth,
+                eventController: _eventController)
+        )
+      ),
       appBar: AppBar(
         title: const Text('Table Calendar'),
         leading: PopupMenuButton<String>(
@@ -104,11 +124,23 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
               focusedDay: focusedDay,
               eventLoader: _getEventsForDay,
               onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+                print("Day select");
                 setState(() {
                   this.selectedDay = selectedDay;
                   this.focusedDay = focusedDay;
                 });
                 _loadEventsForSelectedDay(); // 날짜가 선택될 때 이벤트 로드
+                _loadEventForMonth();
+              },
+              onPageChanged: (focusedDay){
+                print("hello");
+                print(focusedDay);
+                setState(() {
+                  this.focusedDay = DateTime(focusedDay.year,focusedDay.month,1);
+                  this.selectedDay = DateTime(focusedDay.year,focusedDay.month,1);
+                });
+                _loadEventsForSelectedDay(); // 날짜가 선택될 때 이벤트 로드
+                _loadEventForMonth();
               },
               selectedDayPredicate: (DateTime day) {
                 return isSameDay(selectedDay, day);
