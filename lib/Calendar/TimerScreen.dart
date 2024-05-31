@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:planner_application/Calendar/TableCalendar.dart';
+import 'package:planner_application/Calendar/TableCalendarDay.dart';
+import 'package:planner_application/Calendar/TableCalendarWeek.dart';
 
 import './TimePicker.dart';
 
@@ -94,7 +96,22 @@ class _HomeScreenState extends State<TimerScreen> {
                   builder: (context) => const TableCalendarScreen(),
                 ),
               );
-            } else if (value == '타이머') {}
+            } else if (value == '타이머') {
+            } else if (value == '주별') {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const TableCalendarScreenWeek(),
+                ),
+              );
+            } else if (value == '일별') {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const SimpleCalendarScreen(),
+                ),
+              );
+            }
           },
         ),
       ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:planner_application/Calendar/TableCalendarWeek.dart';
 import 'package:planner_application/Calendar/TimerScreen.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import './AddEventScreen.dart';
+import './TableCalendarDay.dart';
 import './View.dart';
 import './database_helper.dart';
 
@@ -66,7 +68,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
         title: const Text('Table Calendar'),
         leading: PopupMenuButton<String>(
           itemBuilder: (BuildContext context) {
-            return {'갤린더', '타이머'}.map((String choice) {
+            return {'캘린더', '타이머', '주별', '일별'}.map((String choice) {
               return PopupMenuItem<String>(
                 value: choice,
                 child: Text(choice),
@@ -74,12 +76,26 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
             }).toList();
           },
           onSelected: (value) {
-            if (value == '갤린더') {
+            if (value == '캘린더') {
             } else if (value == '타이머') {
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(
                   builder: (context) => const TimerScreen(),
+                ),
+              );
+            } else if (value == '주별') {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const TableCalendarScreenWeek(),
+                ),
+              );
+            } else if (value == '일별') {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const SimpleCalendarScreen(),
                 ),
               );
             }
