@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import './database_helper.dart';
 import './AddEventScreen.dart';
+import './View.dart';
 
 class TableCalendarScreenWeek extends StatefulWidget {
   const TableCalendarScreenWeek({super.key});
@@ -178,16 +179,9 @@ class _TableCalendarScreenWeekState extends State<TableCalendarScreenWeek> {
                 ),
               ],
             ),
-            ...selectedEvents.map((event) => ListTile(
-                  title: Text(event.title),
-                  subtitle: Text('${event.startTime} - ${event.endTime}'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      _eventController.text = event.title;
-                    },
-                  ),
-                )),
+            EventListView(
+                selectedEvents: selectedEvents,
+                eventController: _eventController)
           ],
         ),
       ),
@@ -199,7 +193,9 @@ class _TableCalendarScreenWeekState extends State<TableCalendarScreenWeek> {
                 onAddEvent: (Event event, DateTime date, TimeOfDay startTime,
                     TimeOfDay endTime) {
                   _addEvent(event);
+                  _loadEventsForSelectedDay();
                 },
+                selectedDate: selectedDay,
               ),
             ),
           );

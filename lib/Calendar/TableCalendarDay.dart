@@ -131,8 +131,10 @@ class _SimpleCalendarScreenState extends State<SimpleCalendarScreen> {
               builder: (context) => AddEventScreen(
                 onAddEvent: (event, date, startTime, endTime) async {
                   await _addEvent(event, date, startTime, endTime);
+                  _loadEventsForSelectedDay();
                   return true;
                 },
+                selectedDate: selectedDay,
               ),
             ),
           );

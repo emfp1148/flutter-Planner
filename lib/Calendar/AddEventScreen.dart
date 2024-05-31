@@ -5,8 +5,10 @@ import './database_helper.dart';
 
 class AddEventScreen extends StatefulWidget {
   final Function(Event, DateTime, TimeOfDay, TimeOfDay) onAddEvent;
+  final DateTime selectedDate;
 
-  const AddEventScreen({super.key, required this.onAddEvent});
+  const AddEventScreen(
+      {super.key, required this.selectedDate, required this.onAddEvent});
 
   @override
   _AddEventScreenState createState() => _AddEventScreenState();
@@ -17,6 +19,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = widget.selectedDate; // 초기값을 전달받은 날짜로 설정
+  }
 
   @override
   Widget build(BuildContext context) {

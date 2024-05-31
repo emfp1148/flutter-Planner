@@ -251,6 +251,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
             MaterialPageRoute(
               builder: (context) => AddEventScreen(
                 onAddEvent: _addEvent,
+                selectedDate: selectedDay,
               ),
             ),
           );
