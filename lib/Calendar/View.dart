@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 import './database_helper.dart';
 
-class EventListView extends StatelessWidget {
+class EventListView extends StatefulWidget {
   const EventListView({
     super.key,
     required this.selectedEvents,
@@ -12,6 +12,11 @@ class EventListView extends StatelessWidget {
   final List<Event> selectedEvents;
   final TextEditingController _eventController;
 
+  @override
+  State<EventListView> createState() => _EventListViewState();
+}
+
+class _EventListViewState extends State<EventListView> {
   void _showEditDialog(BuildContext context, Event event) {
     final controller = TextEditingController(text: event.title);
 
@@ -35,8 +40,16 @@ class EventListView extends StatelessWidget {
               onPressed: () async {
                 final updatedEvent = event.copy(title: controller.text);
                 await DatabaseHelper.instance.update(updatedEvent);
-
                 Navigator.of(context).pop();
+                final eventsFrommDb = await DatabaseHelper.instance
+                    .readEventsByDate(
+                        DateFormat("yyyy-MM-dd").parse(event.date));
+                setState(() {
+                  debugPrint("----");
+                  debugPrint(eventsFrommDb.toString());
+                  widget.selectedEvents.clear();
+                  widget.selectedEvents.addAll(eventsFrommDb);
+                });
               },
               child: const Text('저장'),
             ),
@@ -48,14 +61,17 @@ class EventListView extends StatelessWidget {
 
   Future<void> _deleteEvent(int id) async {
     await DatabaseHelper.instance.delete(id);
+    setState(() {
+      widget.selectedEvents.removeWhere((element) => element.id == id);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (selectedEvents.isNotEmpty) ...[
-          ...selectedEvents.map((event) => ListTile(
+        if (widget.selectedEvents.isNotEmpty) ...[
+          ...widget.selectedEvents.map((event) => ListTile(
                 title: Text(event.title),
                 subtitle: Text(
                     '${event.date}\n${event.startTime} - ${event.endTime}'),
