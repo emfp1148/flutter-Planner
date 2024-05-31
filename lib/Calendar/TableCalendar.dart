@@ -136,9 +136,10 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                 weekendTextStyle: TextStyle(color: Colors.red),
               ),
             ),
-            eventListView(
-                selectedEvents: selectedEvents,
-                eventController: _eventController)
+            EventListView(
+              selectedEvents: selectedEvents,
+              eventController: _eventController,
+            ),
           ],
         ),
       ),

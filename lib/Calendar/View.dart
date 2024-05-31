@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import './database_helper.dart';
 
-class eventListView extends StatelessWidget {
-  const eventListView({
+class EventListView extends StatelessWidget {
+  const EventListView({
     super.key,
     required this.selectedEvents,
     required TextEditingController eventController,

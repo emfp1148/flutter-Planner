@@ -118,7 +118,7 @@ class _SimpleCalendarScreenState extends State<SimpleCalendarScreen> {
                 ),
               ),
             ),
-            eventListView(
+            EventListView(
                 selectedEvents: selectedEvents,
                 eventController: _eventController)
           ],
