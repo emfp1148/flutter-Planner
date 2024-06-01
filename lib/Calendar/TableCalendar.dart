@@ -138,7 +138,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
               );
             }).toList();
           },
-          onSelected: (value) {
+          onSelected: (value) async {
             if (value == '타이머') {
               Navigator.push(
                 context,
@@ -147,19 +147,21 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                 ),
               );
             } else if (value == '주별') {
-              Navigator.push(
+              await Navigator.push(
                 context,
                 MaterialPageRoute<void>(
                   builder: (context) => const TableCalendarScreenWeek(),
                 ),
               );
+              _loadEventsForSelectedDay();
             } else if (value == '일별') {
-              Navigator.push(
+              await Navigator.push(
                 context,
                 MaterialPageRoute<void>(
                   builder: (context) => const SimpleCalendarScreen(),
                 ),
               );
+              _loadEventsForSelectedDay();
             }
           },
         ),
