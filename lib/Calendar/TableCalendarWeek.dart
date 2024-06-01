@@ -181,7 +181,8 @@ class _TableCalendarScreenWeekState extends State<TableCalendarScreenWeek> {
             ),
             EventListView(
                 selectedEvents: selectedEvents,
-                eventController: _eventController)
+                eventController: _eventController,
+                isUpdate : _loadEventsForSelectedDay)
           ],
         ),
       ),

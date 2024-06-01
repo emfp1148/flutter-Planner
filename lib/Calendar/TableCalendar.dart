@@ -68,6 +68,11 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
     });
   }
 
+
+  void _loadAll(){
+  _loadEventForMonth();
+  _loadEventsForSelectedDay();
+}
   @override
   void initState() {
     super.initState();
@@ -115,7 +120,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                 child: EventListView(
                   selectedEvents: selectedEventsMonth,
                   eventController: _eventController,
-                  isUpdate : _loadEventsForSelectedDay,
+                  isUpdate : _loadAll
                 ),
               ),
             ),
@@ -250,7 +255,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
           EventListView(
               selectedEvents: selectedEvents,
               eventController: _eventController,
-              isUpdate: _loadEventForMonth,
+              isUpdate: _loadAll,
           )
         ]),
       ),

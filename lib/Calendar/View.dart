@@ -7,12 +7,12 @@ class EventListView extends StatefulWidget {
     super.key,
     required this.selectedEvents,
     required TextEditingController eventController,
-    this.isUpdate,
+    required this.isUpdate,
   }) : _eventController = eventController;
 
   final List<Event> selectedEvents;
   final TextEditingController _eventController;
-  final VoidCallback? isUpdate; // 콜백함수, 현재 수정 삭제가 일어날 시 콜백을 부른 클래스에서 setState 실행
+  final VoidCallback isUpdate; // 콜백함수, 현재 수정 삭제가 일어날 시 콜백을 부른 클래스에서 setState 실행
 
   @override
   State<EventListView> createState() => _EventListViewState();
@@ -51,7 +51,7 @@ class _EventListViewState extends State<EventListView> {
                   debugPrint(eventsFrommDb.toString());
                   widget.selectedEvents.clear();
                   widget.selectedEvents.addAll(eventsFrommDb);
-                  widget.isUpdate!();
+                  widget.isUpdate();
                 });
               },
               child: const Text('저장'),
@@ -66,7 +66,7 @@ class _EventListViewState extends State<EventListView> {
     await DatabaseHelper.instance.delete(id);
     setState(() {
       widget.selectedEvents.removeWhere((element) => element.id == id);
-      widget.isUpdate!();
+      widget.isUpdate();
     });
   }
 
