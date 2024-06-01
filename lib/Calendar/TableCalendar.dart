@@ -46,7 +46,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
   void _addEvent(
       Event event, DateTime date, TimeOfDay startTime, TimeOfDay endTime) {
     setState(() {
-      events[date] = [..._getEventsForDay(date), event];
+      events[date] = [..._getEventsForDay(date), event]; // 기존의 event맵에 있는 리스트를 불러와서 새로운 값을 리스트에 추가함
       _loadEventsForSelectedDay(); // 새로운 이벤트를 추가한 후 다시 로드
       _loadEventForMonth();
     });
@@ -93,9 +93,14 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
               ),
             ),
             ListTile(
-              leading: Icon(
-                Icons.open_in_browser,
-                color: Colors.grey[850],
+              leading: isVisible ?
+              Icon(
+                Icons.arrow_drop_down_rounded,
+                size: 40,
+              ) :
+              Icon(
+                Icons.arrow_drop_up_rounded,
+                size: 40,
               ),
               title: const Text('이번 달 일정'),
               onTap: () {
@@ -110,6 +115,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                 child: EventListView(
                   selectedEvents: selectedEventsMonth,
                   eventController: _eventController,
+                  isUpdate : _loadEventsForSelectedDay,
                 ),
               ),
             ),
@@ -168,7 +174,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
               firstDay: DateTime.utc(2021, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
               focusedDay: focusedDay,
-              eventLoader: _getEventsForDay,
+              // eventLoader: _getEventsForDay, // 마커를 최종적으로 불러오는 코드
               onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
                 setState(() {
                   this.selectedDay = selectedDay;
@@ -215,7 +221,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
               top: 10,
               left: MediaQuery.of(context).size.width / 2 - 80, //화면 넓이 double,
               child: Opacity(
-                opacity: 0.5, // 투명도 0으로 할 예정
+                opacity: 0.1, // 투명도 0으로 할 예정
                 child: ElevatedButton(
                     onPressed: () async {
                       DateTime? picked = await showDatePicker(
@@ -242,7 +248,10 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
             ),
           ]),
           EventListView(
-              selectedEvents: selectedEvents, eventController: _eventController)
+              selectedEvents: selectedEvents,
+              eventController: _eventController,
+              isUpdate: _loadEventForMonth,
+          )
         ]),
       ),
       floatingActionButton: FloatingActionButton(
