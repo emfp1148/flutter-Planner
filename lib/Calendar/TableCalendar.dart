@@ -153,7 +153,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                   builder: (context) => const TableCalendarScreenWeek(),
                 ),
               );
-              _loadEventsForSelectedDay();
+              _loadAll();
             } else if (value == '일별') {
               await Navigator.push(
                 context,
@@ -161,7 +161,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                   builder: (context) => const SimpleCalendarScreen(),
                 ),
               );
-              _loadEventsForSelectedDay();
+              _loadAll();
             }
           },
         ),
